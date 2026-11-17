@@ -8,7 +8,6 @@ local Config = require(ReplicatedStorage.Shared.Config)
 
 local World = {}
 World.Bases = {}
-World.PityLabel = nil
 World.EventLabel = nil
 
 local function part(parent, name, size, pos, color, material)
@@ -28,7 +27,7 @@ local function boardLabel(parent, name, text, size, color)
 	gui.Name = name
 	gui.Size = UDim2.new(0, size[1], 0, size[2])
 	gui.StudsOffset = Vector3.new(0, 3, 0)
-	gui.AlwaysOnTop = true
+	gui.AlwaysOnTop = false
 	gui.Parent = parent
 	local label = Instance.new("TextLabel")
 	label.Name = "Text"
@@ -68,7 +67,7 @@ function World.BuildBase(index, def)
 	part(folder, "Post4", { 1, 6, 1 }, { x + doorSide * 18, 4, z + 12 }, { 0.4, 0.3, 0.2 }, Enum.Material.Wood)
 	-- Owner board above the door.
 	local board = part(folder, "OwnerBoard", { 10, 3, 0.6 }, { x + doorSide * 19, 6.5, z }, { 0.06, 0.09, 0.16 }, Enum.Material.SmoothPlastic)
-	boardLabel(board, "OwnerLabel", "BASE " .. def.Name, { 320, 90 }, { 1, 1, 1 })
+	boardLabel(board, "OwnerLabel", "BASE " .. def.Name, { 200, 50 }, { 1, 1, 1 })
 	-- Laser gate filling the door gap; hidden until the base is locked.
 	local laser = part(folder, "LaserGate", { 0.6, 5, 14 }, { x + doorSide * 19.5, 3.5, z }, { 1, 0.1, 0.1 }, Enum.Material.Neon)
 	laser.Transparency = 1
@@ -76,7 +75,7 @@ function World.BuildBase(index, def)
 	-- Green COLLECT pad in front of the door.
 	local collect = part(folder, "CollectPad", { 10, 0.6, 8 }, { x + doorSide * 26, 1.3, z }, { 0.15, 0.85, 0.25 }, Enum.Material.Neon)
 	collect.Name = "CollectPad"
-	boardLabel(collect, "CollectLabel", "COLLECT  $0", { 260, 60 }, { 0.1, 1, 0.3 })
+	boardLabel(collect, "CollectLabel", "COLLECT  $0", { 160, 40 }, { 0.1, 1, 0.3 })
 	local click = Instance.new("ClickDetector")
 	click.Name = "CollectClick"
 	click.Parent = collect
@@ -151,7 +150,7 @@ function World.BuildGearStall()
 	part(folder, "Counter", { 14, 3, 6 }, { pos[1], 1.5, pos[2] }, { 0.15, 0.15, 0.20 }, Enum.Material.SmoothPlastic)
 	part(folder, "Roof", { 16, 0.6, 8 }, { pos[1], 7, pos[2] }, { 1, 0.85, 0.2 }, Enum.Material.Fabric)
 	local sign = part(folder, "Sign", { 12, 3, 0.6 }, { pos[1], 5.5, pos[2] + 3 }, { 0.06, 0.09, 0.16 }, Enum.Material.SmoothPlastic)
-	boardLabel(sign, "GearLabel", "COINS SHOP - GEAR", { 420, 90 }, { 1, 0.85, 0.2 })
+	boardLabel(sign, "GearLabel", "COINS SHOP - GEAR", { 260, 50 }, { 1, 0.85, 0.2 })
 	local click = Instance.new("ClickDetector")
 	click.Name = "GearClick"
 	click.Parent = sign
@@ -162,14 +161,13 @@ function World.BuildPityBoard()
 	folder.Name = "PityBoard"
 	folder.Parent = workspace
 	local board = part(folder, "Board", { 26, 5, 1 }, { 0, 13, -40 }, { 0.06, 0.09, 0.16 }, Enum.Material.SmoothPlastic)
-	World.PityLabel = boardLabel(board, "PityLabel", "Legendary guaranteed in 08:00", { 900, 120 }, { 1, 0.85, 0.2 })
 	-- Big neon market sign with a dark backplate, above the conveyor.
 	local sign = part(folder, "NeonSign", { 34, 6, 1 }, { 0, 20, -42 }, { 0.06, 0.09, 0.16 }, Enum.Material.SmoothPlastic)
 	local signGui = Instance.new("BillboardGui")
 	signGui.Name = "NeonLabel"
 	signGui.Size = UDim2.new(0, 1100, 0, 160)
 	signGui.StudsOffset = Vector3.new(0, 0, 0)
-	signGui.AlwaysOnTop = true
+	signGui.AlwaysOnTop = false
 	signGui.Parent = sign
 	local signText = Instance.new("TextLabel")
 	signText.Name = "Text"
@@ -210,10 +208,9 @@ function World.BuildWorld()
 	World.BuildPityBoard()
 end
 
+-- Pity countdown lives in the HUD now (Hud.PityLabel); this stays as a
+-- no-op so the init loop's call keeps working.
 function World.SetPityText(text)
-	if World.PityLabel ~= nil then
-		World.PityLabel.Text = text
-	end
 end
 
 return World
