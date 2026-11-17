@@ -5,6 +5,7 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 local UserInputService = game:GetService("UserInputService")
 local ContextActionService = game:GetService("ContextActionService")
 local PlayerScripts = Players.LocalPlayer:WaitForChild("PlayerScripts")
@@ -18,6 +19,29 @@ local remotes = ReplicatedStorage:WaitForChild("Remotes")
 for _, name in ipairs({"StateSync", "BuyBrainrot", "SellBrainrot", "LockBase", "DoRebirth", "CollectCash", "BuyGear", "UseSlap", "StealAttempt", "OpenGearShop", "Toast"}) do
 	remotes:WaitForChild(name)
 end
+
+-- Hold-to-buy: every conveyor brainrot carries a ProximityPrompt with
+-- its slot number as an attribute. When the hold completes, fire the
+-- same BuyBrainrot remote the shop cards used to fire. Prompts are
+-- rebuilt whenever a slot is taken, so hook new ones as they appear.
+local function hookBuyPrompt(prompt)
+	prompt.Triggered:Connect(function()
+		local slotIndex = prompt:GetAttribute("SlotIndex")
+		if slotIndex ~= nil then
+			remotes.BuyBrainrot:FireServer(slotIndex)
+		end
+	end)
+end
+for _, descendant in ipairs(Workspace:GetDescendants()) do
+	if descendant:IsA("ProximityPrompt") then
+		hookBuyPrompt(descendant)
+	end
+end
+Workspace.DescendantAdded:Connect(function(descendant)
+	if descendant:IsA("ProximityPrompt") then
+		hookBuyPrompt(descendant)
+	end
+end)
 local lastEvent = "None"
 local lastCarrying = false
 
@@ -68,12 +92,12 @@ local function slapAction(_, state, _)
 	return Enum.ContextActionResult.Pass
 end
 
-ContextActionService:BindAction("SlapThief", slapAction, false, Enum.KeyCode.E)
+ContextActionService:BindAction("SlapThief", slapAction, false, Enum.KeyCode.Q)
 UserInputService.InputBegan:Connect(function(input, processed)
 	if processed then
 		return
 	end
-	if input.KeyCode == Enum.KeyCode.E then
+	if input.KeyCode == Enum.KeyCode.Q then
 		remotes.UseSlap:FireServer()
 	end
 end)

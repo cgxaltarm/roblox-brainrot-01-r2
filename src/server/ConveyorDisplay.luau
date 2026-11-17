@@ -1,7 +1,7 @@
 -- ConveyorDisplay: the five brainrot models standing on the red
 -- carpet, spaced wide apart so their three-line labels never overlap.
--- Clicking a model buys it; the display rebuilds whenever a slot is
--- taken or a new brainrot rolls in.
+-- Hold E on a model to buy it (ProximityPrompt); the display rebuilds
+-- whenever a slot is taken or a new brainrot rolls in.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
@@ -13,7 +13,6 @@ local Format = require(ReplicatedStorage.Shared.Format)
 
 local ConveyorDisplay = {}
 ConveyorDisplay.Models = {}
-ConveyorDisplay.OnBuyRequest = nil
 
 function ConveyorDisplay.SlotPosition(index)
 	local x = (index - 3) * Config.ConveyorSpacing
@@ -37,16 +36,14 @@ function ConveyorDisplay.Refresh()
 				end
 			end
 			model.Parent = workspace
-			local click = Instance.new("ClickDetector")
-			click.Name = "BuyClick"
-			click.MaxActivationDistance = 32
-			click.Parent = model.PrimaryPart
-			local slotIndex = i
-			click.MouseClick:Connect(function(player)
-				if ConveyorDisplay.OnBuyRequest ~= nil then
-					ConveyorDisplay.OnBuyRequest(player, slotIndex)
-				end
-			end)
+			local prompt = Instance.new("ProximityPrompt")
+			prompt.Name = "BuyPrompt"
+			prompt.ActionText = "BELI"
+			prompt.ObjectText = def.Name .. " - " .. Format.Money(slot.Cost)
+			prompt.HoldDuration = 1
+			prompt.MaxActivationDistance = 10
+			prompt:SetAttribute("SlotIndex", i)
+			prompt.Parent = model.PrimaryPart
 			ConveyorDisplay.Models[i] = model
 		end
 	end

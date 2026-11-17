@@ -145,8 +145,6 @@ local function doBuy(player, index)
 	syncAll()
 end
 
-ConveyorDisplay.OnBuyRequest = doBuy
-
 BuyBrainrot.OnServerEvent:Connect(function(player, index)
 	doBuy(player, index)
 end)

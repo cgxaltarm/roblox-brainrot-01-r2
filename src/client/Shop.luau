@@ -1,7 +1,9 @@
 -- Shop: the conveyor cards, the gear shop, the rebirth panel with its
 -- named-character requirements and checkmarks, and the collection
 -- Index. Cards are dark with bold white text, a rarity-coloured
--- border and a gold price, so they read when shrunk.
+-- border and a gold price, so they read when shrunk. Cards are
+-- display-only: buying happens by holding E on the brainrot model
+-- itself (ProximityPrompt), like the real Steal a Brainrot.
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Format = require(ReplicatedStorage.Shared.Format)
@@ -104,14 +106,13 @@ function Shop.RenderConveyor(snapshot)
 		local def = BrainrotData.FindCharacter(slot.CharId)
 		if def ~= nil then
 			local rarityColor = BrainrotData.RarityColor(def.Rarity)
-			local card = Instance.new("TextButton")
+			local card = Instance.new("Frame")
 			card.Name = "Card" .. tostring(i)
 			card.Size = UDim2.new(0, 144, 0, 112)
 			card.Position = UDim2.new(0, (i - 1) * 152, 0, 0)
 			card.BackgroundColor3 = DARK
 			card.BorderColor3 = Color3.new(rarityColor[1], rarityColor[2], rarityColor[3])
 			card.BorderSizePixel = 3
-			card.Text = ""
 			card.Parent = Shop.ConveyorFrame
 			local mark = BrainrotData.MutationMark(slot.Mutation)
 			local nameLabel = Instance.new("TextLabel")
@@ -144,10 +145,6 @@ function Shop.RenderConveyor(snapshot)
 			if snapshot.Cash < slot.Cost then
 				card.BackgroundTransparency = 0.4
 			end
-			local slotIndex = i
-			card.MouseButton1Click:Connect(function()
-				Shop.Remotes.BuyBrainrot:FireServer(slotIndex)
-			end)
 		end
 	end
 end
