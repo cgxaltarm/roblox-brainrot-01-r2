@@ -15,6 +15,9 @@ local Effects = require(PlayerScripts.Client.Effects)
 
 local player = Players.LocalPlayer
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
+for _, name in ipairs({"StateSync", "BuyBrainrot", "SellBrainrot", "LockBase", "DoRebirth", "CollectCash", "BuyGear", "UseSlap", "StealAttempt", "OpenGearShop", "Toast"}) do
+	remotes:WaitForChild(name)
+end
 local lastEvent = "None"
 local lastCarrying = false
 
