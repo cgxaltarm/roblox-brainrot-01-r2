@@ -161,11 +161,13 @@ function World.BuildPityBoard()
 	folder.Name = "PityBoard"
 	folder.Parent = workspace
 	local board = part(folder, "Board", { 26, 5, 1 }, { 0, 13, -40 }, { 0.06, 0.09, 0.16 }, Enum.Material.SmoothPlastic)
-	-- Big neon market sign with a dark backplate, above the conveyor.
-	local sign = part(folder, "NeonSign", { 34, 6, 1 }, { 0, 20, -42 }, { 0.06, 0.09, 0.16 }, Enum.Material.SmoothPlastic)
+	-- Neon market sign with a dark backplate, above the conveyor.
+	-- Kept small and high so it never covers the HUD banner/pity text
+	-- when the player looks toward the conveyor from spawn.
+	local sign = part(folder, "NeonSign", { 22, 4, 1 }, { 0, 26, -42 }, { 0.06, 0.09, 0.16 }, Enum.Material.SmoothPlastic)
 	local signGui = Instance.new("BillboardGui")
 	signGui.Name = "NeonLabel"
-	signGui.Size = UDim2.new(0, 1100, 0, 160)
+	signGui.Size = UDim2.new(0, 700, 0, 110)
 	signGui.StudsOffset = Vector3.new(0, 0, 0)
 	signGui.AlwaysOnTop = false
 	signGui.Parent = sign
