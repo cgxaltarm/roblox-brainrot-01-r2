@@ -38,7 +38,7 @@ function Gear.BuyGear(player, gearId)
 		if character ~= nil then
 			local humanoid = character:FindFirstChildOfClass("Humanoid")
 			if humanoid ~= nil then
-				humanoid.WalkSpeed = 16 * Config.CoilSpeedMult
+				humanoid.WalkSpeed = Economy.BaseWalkSpeed(player) * Config.CoilSpeedMult
 			end
 		end
 	elseif gearId == "trap" then
@@ -118,7 +118,7 @@ function Gear.Slap(player)
 							task.spawn(function()
 								task.wait(2)
 								if humanoid.Parent ~= nil then
-									humanoid.WalkSpeed = 16
+									humanoid.WalkSpeed = Economy.BaseWalkSpeed(other)
 								end
 							end)
 						end
@@ -147,7 +147,7 @@ function Gear.CheckTraps(Steal)
 							task.spawn(function()
 								task.wait(Config.TrapFreezeSeconds)
 								if humanoid.Parent ~= nil then
-									humanoid.WalkSpeed = 16
+									humanoid.WalkSpeed = Economy.BaseWalkSpeed(player)
 								end
 							end)
 						end

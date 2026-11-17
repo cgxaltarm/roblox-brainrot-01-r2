@@ -46,7 +46,7 @@ function Steal.AttachCarried(player, charId, mutation)
 	Steal.CarriedModels[player.UserId] = model
 	local humanoid = character:FindFirstChildOfClass("Humanoid")
 	if humanoid ~= nil then
-		humanoid.WalkSpeed = 16 * Config.CarrySpeedMult
+		humanoid.WalkSpeed = Economy.BaseWalkSpeed(player) * Config.CarrySpeedMult
 	end
 end
 
@@ -60,7 +60,7 @@ function Steal.DropCarried(player, returnHome)
 	if character ~= nil then
 		local humanoid = character:FindFirstChildOfClass("Humanoid")
 		if humanoid ~= nil then
-			humanoid.WalkSpeed = 16
+			humanoid.WalkSpeed = Economy.BaseWalkSpeed(player)
 		end
 	end
 	local state = Economy.Get(player)

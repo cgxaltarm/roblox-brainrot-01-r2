@@ -55,6 +55,7 @@ local LockBase = makeRemote("LockBase")
 local DoRebirth = makeRemote("DoRebirth")
 local CollectCash = makeRemote("CollectCash")
 local BuyGear = makeRemote("BuyGear")
+local BuyUpgrade = makeRemote("BuyUpgrade")
 local UseSlap = makeRemote("UseSlap")
 local StealAttempt = makeRemote("StealAttempt")
 local OpenGearShop = makeRemote("OpenGearShop")
@@ -102,6 +103,7 @@ local function buildSnapshot(player)
 		TutorialStep = state.TutorialStep,
 		GearSlap = state.Gear.Slap,
 		GearTraps = state.Gear.Traps,
+		Upgrades = { Luck = state.Upgrades.Luck, Income = state.Upgrades.Income, Speed = state.Upgrades.Speed },
 		CanRebirth = canRebirth,
 		RebirthNeed = need,
 		RebirthCost = nextReq ~= nil and nextReq.Cost or 0,
@@ -195,6 +197,18 @@ BuyGear.OnServerEvent:Connect(function(player, gearId)
 		showToast(player, "Gear bought: " .. gearId)
 	else
 		showToast(player, "Cannot buy gear: " .. why)
+	end
+	syncPlayer(player)
+end)
+
+BuyUpgrade.OnServerEvent:Connect(function(player, upgradeId)
+	local ok, why = Economy.BuyUpgrade(player, upgradeId)
+	if ok then
+		local state = Economy.Get(player)
+		local level = state ~= nil and state.Upgrades[upgradeId] or 0
+		showToast(player, upgradeId .. " naik ke Lv" .. tostring(level) .. "!")
+	else
+		showToast(player, why)
 	end
 	syncPlayer(player)
 end)
@@ -304,11 +318,17 @@ local function onPlayerAdded(player)
 	player.CharacterAdded:Connect(function(character)
 		task.wait(1)
 		local state = Economy.Get(player)
-		if state ~= nil and state.Gear.CoilUntil > os.time() then
-			local humanoid = character:FindFirstChildOfClass("Humanoid")
-			if humanoid ~= nil then
-				humanoid.WalkSpeed = 16 * Config.CoilSpeedMult
-			end
+		if state == nil then
+			return
+		end
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if humanoid == nil then
+			return
+		end
+		if state.Gear.CoilUntil > os.time() then
+			humanoid.WalkSpeed = Economy.BaseWalkSpeed(player) * Config.CoilSpeedMult
+		else
+			humanoid.WalkSpeed = Economy.BaseWalkSpeed(player)
 		end
 	end)
 	syncPlayer(player)

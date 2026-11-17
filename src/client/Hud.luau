@@ -111,6 +111,7 @@ function Hud.Build(remotes, callbacks)
 	Hud.CollectButton = makeButton(gui, "CollectButton", UDim2.new(0, 200, 0, 48), UDim2.new(1, -220, 1, -108), "COLLECT PILE", Color3.new(0.15, 0.85, 0.25), 20)
 	local gearButton = makeButton(gui, "GearButton", UDim2.new(0, 96, 0, 48), UDim2.new(1, -326, 1, -108), "GEAR", GOLD, 20)
 	local indexButton = makeButton(gui, "IndexButton", UDim2.new(0, 96, 0, 48), UDim2.new(1, -326, 1, -164), "INDEX", Color3.new(0.68, 0.4, 0.95), 20)
+	local buffButton = makeButton(gui, "BuffButton", UDim2.new(0, 96, 0, 48), UDim2.new(1, -326, 1, -220), "BUFF", Color3.new(0.15, 0.85, 0.25), 20)
 
 	Hud.LockButton.MouseButton1Click:Connect(function()
 		remotes.LockBase:FireServer()
@@ -126,6 +127,9 @@ function Hud.Build(remotes, callbacks)
 	end)
 	indexButton.MouseButton1Click:Connect(function()
 		callbacks.ToggleIndex()
+	end)
+	buffButton.MouseButton1Click:Connect(function()
+		callbacks.ToggleBuff()
 	end)
 end
 

@@ -48,6 +48,13 @@ function Save.LoadPlayer(player)
 	if type(data.Owned) == "table" then
 		state.Owned = data.Owned
 	end
+	if type(data.Upgrades) == "table" then
+		for _, id in ipairs({ "Luck", "Income", "Speed" }) do
+			if type(data.Upgrades[id]) == "number" then
+				state.Upgrades[id] = math.clamp(math.floor(data.Upgrades[id]), 0, 5)
+			end
+		end
+	end
 	return state
 end
 
@@ -65,6 +72,7 @@ function Save.SavePlayer(player)
 		Rebirth = state.Rebirth,
 		Placed = state.Placed,
 		Owned = state.Owned,
+		Upgrades = state.Upgrades,
 	}
 	local ok, _ = pcall(function()
 		ds:SetAsync("player_" .. tostring(player.UserId), data)

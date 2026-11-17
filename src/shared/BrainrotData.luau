@@ -244,6 +244,15 @@ BrainrotData.GEAR = {
 	{ Id = "trap", Name = "Trap", Cost = 1000, Desc = "Freeze a thief for 7 seconds. Max 3 active." },
 }
 
+-- Buff Shop: permanent per-session upgrades, max level 5 each.
+-- Prices are per track, per level (level 1 costs Prices[1], etc.).
+BrainrotData.UPGRADE_MAX = 5
+BrainrotData.UPGRADES = {
+	{ Id = "Luck", Name = "LUCK", Desc = "+15% bobot langka", Prices = { 1000, 2500, 6000, 15000, 35000 } },
+	{ Id = "Income", Name = "INCOME", Desc = "+20% income", Prices = { 1000, 2500, 6000, 15000, 35000 } },
+	{ Id = "Speed", Name = "SPEED", Desc = "+2 WalkSpeed", Prices = { 1000, 2500, 6000, 15000, 35000 } },
+}
+
 function BrainrotData.FindCharacter(id)
 	for _, def in ipairs(BrainrotData.CHARACTERS) do
 		if def.Id == id then
@@ -279,15 +288,25 @@ function BrainrotData.IncomeFor(def, mutationName, rebirthLevel, eventMult)
 	return math.floor(income)
 end
 
-function BrainrotData.RollRarity()
+function BrainrotData.RollRarity(luckLevel)
+	luckLevel = luckLevel or 0
+	-- Luck multiplies every non-Common weight by (1 + 0.15 x level);
+	-- the roll below normalises against the new total.
+	local mult = 1 + 0.15 * luckLevel
+	local function weight(rarity)
+		if rarity.Name == "Common" then
+			return rarity.Weight
+		end
+		return rarity.Weight * mult
+	end
 	local total = 0
 	for _, rarity in ipairs(BrainrotData.RARITIES) do
-		total = total + rarity.Weight
+		total = total + weight(rarity)
 	end
 	local roll = math.random() * total
 	local acc = 0
 	for _, rarity in ipairs(BrainrotData.RARITIES) do
-		acc = acc + rarity.Weight
+		acc = acc + weight(rarity)
 		if roll <= acc then
 			return rarity.Name
 		end

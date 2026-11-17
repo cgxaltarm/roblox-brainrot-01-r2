@@ -16,7 +16,7 @@ local Effects = require(PlayerScripts.Client.Effects)
 
 local player = Players.LocalPlayer
 local remotes = ReplicatedStorage:WaitForChild("Remotes")
-for _, name in ipairs({"StateSync", "BuyBrainrot", "SellBrainrot", "LockBase", "DoRebirth", "CollectCash", "BuyGear", "UseSlap", "StealAttempt", "OpenGearShop", "Toast"}) do
+for _, name in ipairs({"StateSync", "BuyBrainrot", "SellBrainrot", "LockBase", "DoRebirth", "CollectCash", "BuyGear", "BuyUpgrade", "UseSlap", "StealAttempt", "OpenGearShop", "Toast"}) do
 	remotes:WaitForChild(name)
 end
 
@@ -54,6 +54,9 @@ Hud.Build(remotes, {
 	end,
 	ToggleIndex = function()
 		Shop.ToggleIndex()
+	end,
+	ToggleBuff = function()
+		Shop.ToggleBuff()
 	end,
 })
 Shop.Build(remotes)

@@ -15,6 +15,7 @@ Shop.ConveyorFrame = nil
 Shop.GearPanel = nil
 Shop.RebirthPanel = nil
 Shop.IndexPanel = nil
+Shop.BuffPanel = nil
 Shop.OpenPanel = ""
 
 local DARK = Color3.new(0.06, 0.09, 0.16)
@@ -59,6 +60,7 @@ function Shop.Build(remotes)
 	Shop.GearPanel = makePanel("GearPanel", UDim2.new(0, 420, 0, 260), UDim2.new(0.5, -210, 0.5, -130))
 	Shop.RebirthPanel = makePanel("RebirthPanel", UDim2.new(0, 460, 0, 300), UDim2.new(0.5, -230, 0.5, -150))
 	Shop.IndexPanel = makePanel("IndexPanel", UDim2.new(0, 560, 0, 380), UDim2.new(0.5, -280, 0.5, -190))
+	Shop.BuffPanel = makePanel("BuffPanel", UDim2.new(0, 460, 0, 270), UDim2.new(0.5, -230, 0.5, -135))
 end
 
 function Shop.Toggle(panelName)
@@ -70,6 +72,7 @@ function Shop.Toggle(panelName)
 	Shop.GearPanel.Visible = Shop.OpenPanel == "gear"
 	Shop.RebirthPanel.Visible = Shop.OpenPanel == "rebirth"
 	Shop.IndexPanel.Visible = Shop.OpenPanel == "index"
+	Shop.BuffPanel.Visible = Shop.OpenPanel == "buff"
 end
 
 function Shop.ToggleGear()
@@ -84,6 +87,10 @@ function Shop.ToggleIndex()
 	Shop.Toggle("index")
 end
 
+function Shop.ToggleBuff()
+	Shop.Toggle("buff")
+end
+
 function Shop.Render(snapshot)
 	Shop.RenderConveyor(snapshot)
 	if Shop.OpenPanel == "gear" then
@@ -92,6 +99,8 @@ function Shop.Render(snapshot)
 		Shop.RenderRebirth(snapshot)
 	elseif Shop.OpenPanel == "index" then
 		Shop.RenderIndex(snapshot)
+	elseif Shop.OpenPanel == "buff" then
+		Shop.RenderBuff(snapshot)
 	end
 end
 
@@ -170,6 +179,71 @@ function Shop.RenderGear(snapshot)
 		button.MouseButton1Click:Connect(function()
 			Shop.Remotes.BuyGear:FireServer(gearId)
 		end)
+	end
+end
+
+function Shop.RenderBuff(snapshot)
+	for _, child in ipairs(Shop.BuffPanel:GetChildren()) do
+		child:Destroy()
+	end
+	makeTitle(Shop.BuffPanel, "BUFF SHOP - UPGRADE PERMANEN")
+	local upgrades = snapshot.Upgrades or { Luck = 0, Income = 0, Speed = 0 }
+	for i, def in ipairs(BrainrotData.UPGRADES) do
+		local level = upgrades[def.Id] or 0
+		local maxed = level >= BrainrotData.UPGRADE_MAX
+		local row = Instance.new("Frame")
+		row.Size = UDim2.new(1, -16, 0, 64)
+		row.Position = UDim2.new(0, 8, 0, 40 + (i - 1) * 72)
+		row.BackgroundColor3 = DARK
+		row.BorderColor3 = GOLD
+		row.BorderSizePixel = 2
+		row.Parent = Shop.BuffPanel
+		local nameLabel = Instance.new("TextLabel")
+		nameLabel.Size = UDim2.new(1, -140, 0, 30)
+		nameLabel.Position = UDim2.new(0, 8, 0, 4)
+		nameLabel.BackgroundTransparency = 1
+		nameLabel.Text = def.Name .. "  Lv " .. tostring(level) .. "/5"
+		nameLabel.TextColor3 = Color3.new(1, 1, 1)
+		nameLabel.TextScaled = true
+		nameLabel.Font = Enum.Font.GothamBold
+		nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+		nameLabel.Parent = row
+		local effectLabel = Instance.new("TextLabel")
+		effectLabel.Size = UDim2.new(1, -140, 0, 26)
+		effectLabel.Position = UDim2.new(0, 8, 0, 34)
+		effectLabel.BackgroundTransparency = 1
+		if maxed then
+			effectLabel.Text = "MAX - " .. def.Desc .. " / level"
+		else
+			effectLabel.Text = "Berikutnya: " .. def.Desc .. " - " .. Format.Money(def.Prices[level + 1])
+		end
+		effectLabel.TextColor3 = GOLD
+		effectLabel.TextScaled = true
+		effectLabel.Font = Enum.Font.GothamBold
+		effectLabel.TextXAlignment = Enum.TextXAlignment.Left
+		effectLabel.Parent = row
+		local button = Instance.new("TextButton")
+		button.Size = UDim2.new(0, 118, 0, 48)
+		button.Position = UDim2.new(1, -126, 0, 8)
+		button.BackgroundColor3 = Color3.new(0.64, 0.90, 0.21)
+		button.TextColor3 = Color3.new(0.06, 0.09, 0.16)
+		button.TextScaled = true
+		button.Font = Enum.Font.GothamBold
+		button.Parent = row
+		if maxed then
+			button.Text = "MAX"
+			button.BackgroundTransparency = 0.5
+		else
+			button.Text = "UPGRADE " .. Format.Money(def.Prices[level + 1])
+			if snapshot.Cash < def.Prices[level + 1] then
+				row.BackgroundTransparency = 0.4
+				button.BackgroundTransparency = 0.5
+			end
+			local upgradeId = def.Id
+			button.MouseButton1Click:Connect(function()
+				Shop.Remotes.BuyUpgrade:FireServer(upgradeId)
+			end)
+		end
 	end
 end
 

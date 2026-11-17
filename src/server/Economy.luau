@@ -24,6 +24,7 @@ function Economy.NewPlayer(player)
 		StealCooldownUntil = 0,
 		JoinTime = os.time(),
 		Gear = { Slap = false, CoilUntil = 0, Traps = 0 },
+		Upgrades = { Luck = 0, Income = 0, Speed = 0 },
 		TutorialStep = 0,
 	}
 	return Economy.Players[player.UserId]
@@ -65,7 +66,62 @@ function Economy.GetIncomePerSec(player, eventMult)
 			total = total + BrainrotData.IncomeFor(def, placed.Mutation, state.Rebirth, eventMult)
 		end
 	end
-	return total
+	-- Buff Shop: each Income level adds +20%.
+	return math.floor(total * (1 + 0.2 * state.Upgrades.Income))
+end
+
+-- Base walk speed: 16, +2 per Speed upgrade level (max 26 at Lv 5).
+-- Coil and carry multipliers always apply on top of this number.
+function Economy.BaseWalkSpeed(player)
+	local state = Economy.Get(player)
+	local level = 0
+	if state ~= nil then
+		level = state.Upgrades.Speed
+	end
+	return 16 + 2 * level
+end
+
+function Economy.BuyUpgrade(player, upgradeId)
+	local state = Economy.Get(player)
+	if state == nil then
+		return false, "no state"
+	end
+	local def = nil
+	for _, u in ipairs(BrainrotData.UPGRADES) do
+		if u.Id == upgradeId then
+			def = u
+		end
+	end
+	if def == nil then
+		return false, "unknown upgrade"
+	end
+	local level = state.Upgrades[upgradeId] or 0
+	if level >= BrainrotData.UPGRADE_MAX then
+		return false, "Sudah max"
+	end
+	local cost = def.Prices[level + 1]
+	if state.Cash < cost then
+		return false, "Uang tidak cukup"
+	end
+	state.Cash = state.Cash - cost
+	state.Upgrades[upgradeId] = level + 1
+	if upgradeId == "Speed" then
+		-- Apply at once so the player feels it without respawning.
+		local character = player.Character
+		if character ~= nil then
+			local humanoid = character:FindFirstChildOfClass("Humanoid")
+			if humanoid ~= nil then
+				local speed = Economy.BaseWalkSpeed(player)
+				if state.Gear.CoilUntil > os.time() then
+					speed = speed * Config.CoilSpeedMult
+				elseif state.Carrying ~= nil then
+					speed = speed * Config.CarrySpeedMult
+				end
+				humanoid.WalkSpeed = speed
+			end
+		end
+	end
+	return true, "upgraded"
 end
 
 function Economy.TickIncome(eventMult)

@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
 local Config = require(ReplicatedStorage.Shared.Config)
+local Economy = require(ServerScriptService.Server.Economy)
 local Events = require(ServerScriptService.Server.Events)
 
 local Conveyor = {}
@@ -16,10 +17,23 @@ Conveyor.StartedAt = os.time()
 Conveyor.NextEpicIn = Config.PityEpicSeconds
 Conveyor.NextLegendaryIn = Config.PityLegendarySeconds
 
-function Conveyor.RollSlot(forceRarity)
+-- The conveyor is shared by everyone in the server, so a roll uses
+-- the highest Luck level among online players (in solo play that is
+-- just your own level).
+local function maxLuck()
+	local best = 0
+	for _, state in pairs(Economy.Players) do
+		if state.Upgrades.Luck > best then
+			best = state.Upgrades.Luck
+		end
+	end
+	return best
+end
+
+function Conveyor.RollSlot(forceRarity, luckLevel)
 	local rarity = forceRarity
 	if rarity == nil then
-		rarity = BrainrotData.RollRarity()
+		rarity = BrainrotData.RollRarity(luckLevel or 0)
 	end
 	local def = BrainrotData.RollCharacterOfRarity(rarity)
 	local mutation = BrainrotData.RollMutation()
@@ -42,7 +56,7 @@ function Conveyor.SpawnNext()
 		force = "Epic"
 		Conveyor.LastEpicAt = now
 	end
-	local slot = Conveyor.RollSlot(force)
+	local slot = Conveyor.RollSlot(force, maxLuck())
 	if Events.Current == "GoldenHour" then
 		slot.Mutation = "Golden"
 		local def = BrainrotData.FindCharacter(slot.CharId)
@@ -64,7 +78,7 @@ function Conveyor.Fill()
 	Conveyor.LastEpicAt = os.time()
 	Conveyor.LastLegendaryAt = os.time()
 	for _ = 1, Config.ConveyorSlots do
-		table.insert(Conveyor.Slots, Conveyor.RollSlot(nil))
+		table.insert(Conveyor.Slots, Conveyor.RollSlot(nil, maxLuck()))
 	end
 end
 
