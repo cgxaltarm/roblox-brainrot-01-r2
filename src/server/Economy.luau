@@ -2,8 +2,9 @@
 -- rebirths, locks and the collect pile. Every other server module reads
 -- and writes through these functions; the client never touches money.
 
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
-local Config = require(script.Parent.Parent.Shared.Config)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local Economy = {}
 Economy.Players = {}

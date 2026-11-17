@@ -3,7 +3,8 @@
 -- laser gate and a green COLLECT pad out front. Stalls, string lights,
 -- lamp posts and the Coins Shop stall fill the plaza around them.
 
-local Config = require(script.Parent.Parent.Shared.Config)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local World = {}
 World.Bases = {}

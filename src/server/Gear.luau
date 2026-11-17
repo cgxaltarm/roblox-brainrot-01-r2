@@ -2,9 +2,11 @@
 -- boost, or a Trap that freezes a thief who steps on it. Gear gives
 -- money a second purpose and stealing a real counterplay.
 
-local Economy = require(script.Parent.Economy)
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
-local Config = require(script.Parent.Parent.Shared.Config)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Economy = require(ServerScriptService.Server.Economy)
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local Gear = {}
 Gear.Traps = {}

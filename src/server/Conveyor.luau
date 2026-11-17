@@ -2,9 +2,11 @@
 -- A pity timer guarantees an Epic every few minutes and a Legendary
 -- after a longer wait, so there is always a reason to stay and watch.
 
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
-local Config = require(script.Parent.Parent.Shared.Config)
-local Events = require(script.Parent.Events)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
+local Config = require(ReplicatedStorage.Shared.Config)
+local Events = require(ServerScriptService.Server.Events)
 
 local Conveyor = {}
 Conveyor.Slots = {}

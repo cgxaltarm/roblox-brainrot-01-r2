@@ -3,7 +3,8 @@
 -- income), with a Golden Hour bonus round in between. The HUD and the
 -- pity board always show what is coming next.
 
-local Config = require(script.Parent.Parent.Shared.Config)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local Events = {}
 Events.Current = "None"

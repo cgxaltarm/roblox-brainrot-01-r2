@@ -3,8 +3,9 @@
 -- eyes, but its signature prop parts give it a silhouette no other
 -- character has. Labels are three separate lines on a dark backplate.
 
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
-local Format = require(script.Parent.Parent.Shared.Format)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
+local Format = require(ReplicatedStorage.Shared.Format)
 
 local CharacterModels = {}
 

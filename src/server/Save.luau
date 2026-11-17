@@ -3,8 +3,10 @@
 -- when the player leaves. A failed save never blocks the game.
 
 local DataStoreService = game:GetService("DataStoreService")
-local Economy = require(script.Parent.Economy)
-local Config = require(script.Parent.Parent.Shared.Config)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Economy = require(ServerScriptService.Server.Economy)
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local Save = {}
 local store = nil

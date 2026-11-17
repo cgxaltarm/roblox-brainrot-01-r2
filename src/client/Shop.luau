@@ -3,8 +3,9 @@
 -- Index. Cards are dark with bold white text, a rarity-coloured
 -- border and a gold price, so they read when shrunk.
 
-local Format = require(script.Parent.Parent.Shared.Format)
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Format = require(ReplicatedStorage.Shared.Format)
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
 
 local Shop = {}
 Shop.Remotes = nil

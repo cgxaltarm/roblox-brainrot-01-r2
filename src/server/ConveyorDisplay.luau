@@ -3,11 +3,13 @@
 -- Clicking a model buys it; the display rebuilds whenever a slot is
 -- taken or a new brainrot rolls in.
 
-local Conveyor = require(script.Parent.Conveyor)
-local CharacterModels = require(script.Parent.CharacterModels)
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
-local Config = require(script.Parent.Parent.Shared.Config)
-local Format = require(script.Parent.Parent.Shared.Format)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Conveyor = require(ServerScriptService.Server.Conveyor)
+local CharacterModels = require(ServerScriptService.Server.CharacterModels)
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
+local Config = require(ReplicatedStorage.Shared.Config)
+local Format = require(ReplicatedStorage.Shared.Format)
 
 local ConveyorDisplay = {}
 ConveyorDisplay.Models = {}

@@ -2,11 +2,13 @@
 -- its pads, show the lock laser and timer, and keep the collect pad
 -- and its coin pile in step with the pending pile.
 
-local Economy = require(script.Parent.Economy)
-local World = require(script.Parent.World)
-local CharacterModels = require(script.Parent.CharacterModels)
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
-local Format = require(script.Parent.Parent.Shared.Format)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Economy = require(ServerScriptService.Server.Economy)
+local World = require(ServerScriptService.Server.World)
+local CharacterModels = require(ServerScriptService.Server.CharacterModels)
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
+local Format = require(ReplicatedStorage.Shared.Format)
 
 local Base = {}
 Base.Models = {}

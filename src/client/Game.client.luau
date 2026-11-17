@@ -7,10 +7,11 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local ContextActionService = game:GetService("ContextActionService")
+local PlayerScripts = Players.LocalPlayer:WaitForChild("PlayerScripts")
 
-local Hud = require(script.Parent.Hud)
-local Shop = require(script.Parent.Shop)
-local Effects = require(script.Parent.Effects)
+local Hud = require(PlayerScripts.Client.Hud)
+local Shop = require(PlayerScripts.Client.Shop)
+local Effects = require(PlayerScripts.Client.Effects)
 
 local player = Players.LocalPlayer
 local remotes = ReplicatedStorage:WaitForChild("Remotes")

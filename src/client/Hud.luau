@@ -3,8 +3,9 @@
 -- bottom-right, tutorial toasts on join. Dark cards, bold white text,
 -- gold prices: readable when the screenshot is shrunk.
 
-local Format = require(script.Parent.Parent.Shared.Format)
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Format = require(ReplicatedStorage.Shared.Format)
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
 
 local Hud = {}
 Hud.MoneyLabel = nil

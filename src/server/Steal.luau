@@ -2,11 +2,13 @@
 -- base, carries it home slowly, and drops it when anyone tags them or
 -- slaps them. During Rush Hour a thief NPC raids a random unlocked base.
 
-local Economy = require(script.Parent.Economy)
-local Base = require(script.Parent.Base)
-local CharacterModels = require(script.Parent.CharacterModels)
-local BrainrotData = require(script.Parent.Parent.Shared.BrainrotData)
-local Config = require(script.Parent.Parent.Shared.Config)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Economy = require(ServerScriptService.Server.Economy)
+local Base = require(ServerScriptService.Server.Base)
+local CharacterModels = require(ServerScriptService.Server.CharacterModels)
+local BrainrotData = require(ReplicatedStorage.Shared.BrainrotData)
+local Config = require(ReplicatedStorage.Shared.Config)
 
 local Steal = {}
 Steal.CarriedModels = {}
