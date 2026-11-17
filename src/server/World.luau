@@ -71,9 +71,8 @@ function World.BuildBase(index, def)
 	boardLabel(board, "OwnerLabel", "BASE " .. def.Name, { 320, 90 }, { 1, 1, 1 })
 	-- Laser gate filling the door gap; hidden until the base is locked.
 	local laser = part(folder, "LaserGate", { 0.6, 5, 14 }, { x + doorSide * 19.5, 3.5, z }, { 1, 0.1, 0.1 }, Enum.Material.Neon)
-	laser.Transparency = 0.4
+	laser.Transparency = 1
 	laser.CanCollide = false
-	laser.Visible = false
 	-- Green COLLECT pad in front of the door.
 	local collect = part(folder, "CollectPad", { 10, 0.6, 8 }, { x + doorSide * 26, 1.3, z }, { 0.15, 0.85, 0.25 }, Enum.Material.Neon)
 	collect.Name = "CollectPad"
@@ -102,7 +101,7 @@ function World.BuildBase(index, def)
 	for i = 1, 8 do
 		local coin = part(folder, "Coin" .. tostring(i), { 1.6, 0.4, 1.6 }, { x + doorSide * 26 - 3 + (i - 1) * 0.9, 1.8, z - 2 }, { 1, 0.85, 0.2 }, Enum.Material.Metal)
 		coin.Shape = Enum.PartType.Cylinder
-		coin.Visible = false
+		coin.Transparency = 1
 		coins[i] = coin
 	end
 	World.Bases[index] = {

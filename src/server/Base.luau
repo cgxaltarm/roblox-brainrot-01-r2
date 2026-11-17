@@ -111,7 +111,7 @@ function Base.SetLaser(player, visible, secondsLeft)
 	if base == nil then
 		return
 	end
-	base.Laser.Visible = visible
+	base.Laser.Transparency = visible and 0.4 or 1
 	local gui = base.Board:FindFirstChild("OwnerLabel")
 	if gui ~= nil then
 		local label = gui:FindFirstChild("Text")
@@ -143,7 +143,7 @@ function Base.UpdateCollectPad(player)
 		shown = math.min(8, 1 + math.floor(state.Pending / 500))
 	end
 	for i, coin in ipairs(base.Coins) do
-		coin.Visible = i <= shown
+		coin.Transparency = (i <= shown) and 0 or 1
 	end
 end
 
